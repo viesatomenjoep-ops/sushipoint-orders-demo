@@ -6,15 +6,15 @@ import type { ProductItem } from "@/lib/types";
  * into the structured shape stored in the `producten` jsonb column.
  */
 export function parseProducten(raw: unknown): ProductItem[] {
-  if (!Array.isArray(raw)) {
-    throw new Error("producten must be an array");
-  }
+  // n8n collapses a single-item array to a bare object in some node
+  // configurations — accept that shape too rather than rejecting it.
+  const list = Array.isArray(raw) ? raw : [raw];
 
-  if (raw.length === 0) {
+  if (list.length === 0) {
     throw new Error("producten is empty");
   }
 
-  return raw.map((item, index) => {
+  return list.map((item, index) => {
     if (typeof item !== "object" || item === null) {
       throw new Error(`producten[${index}] must be an object`);
     }
