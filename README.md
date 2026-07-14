@@ -84,6 +84,22 @@ Set `N8N_ORDERS_WEBHOOK_SECRET` (a long random value, e.g.
 `openssl rand -hex 32`) in `.env.local` and in your deployment's environment
 variables, and use the same value in n8n's header.
 
+## Voice widget (Vapi)
+
+`components/vapi-widget.tsx` loads Vapi's official floating voice-agent
+widget (a script tag, not an iframe — vapi.ai sends
+`Content-Security-Policy: frame-ancestors 'none'`, so it can't be embedded
+any other way) site-wide via `app/layout.tsx`. It renders its own floating
+button and expanding call UI once loaded.
+
+Set `NEXT_PUBLIC_VAPI_PUBLIC_KEY` in `.env.local` and your deployment's
+environment variables — get it from the Vapi dashboard under
+**Settings → API Keys → Public Key** (this is different from the `shareKey`
+used in Vapi's shareable demo links). The assistant ID is hardcoded in
+`components/vapi-widget.tsx` (`VAPI_ASSISTANT_ID`); if `NEXT_PUBLIC_VAPI_PUBLIC_KEY`
+is unset, the widget silently does nothing (logs a console warning) instead
+of breaking the page.
+
 ## Security notes
 
 - `SUPABASE_SERVICE_ROLE_KEY` is used in exactly one place:

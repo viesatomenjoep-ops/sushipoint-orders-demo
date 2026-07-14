@@ -77,6 +77,10 @@
 - `lib/supabase/admin.ts` — service-role client, used only inside this route, to perform the insert (the `orders` table has no anon/authenticated insert policy by design)
 - `totaalprijs` isn't in the source data yet, so it defaults to `0` if n8n doesn't send it; the route accepts it as an optional field for when a price source is wired up later
 
+### Step 12 — Vapi voice widget
+- `components/vapi-widget.tsx` — loads Vapi's official floating-button script (`html-script-tag`), mounted site-wide in `app/layout.tsx`. Not an iframe: `vapi.ai` sends `frame-ancestors 'none'`, so the shareable demo link (`?demo=true&shareKey=...`) can't be framed — the officially embeddable widget (public API key + assistant ID) is the only way to get a real in-page floating/expanding widget
+- Requires `NEXT_PUBLIC_VAPI_PUBLIC_KEY` (Vapi dashboard → Settings → API Keys → Public Key); degrades to a no-op with a console warning if unset, rather than breaking the page
+
 ---
 
 ### Deliverables produced in this pass
