@@ -1,0 +1,100 @@
+"use client";
+
+import { useState } from "react";
+import { Eye, PackageOpen } from "lucide-react";
+import type { Order } from "@/lib/types";
+import OrderDetailModal from "./order-detail-modal";
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleString("nl-NL", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function formatPrice(amount: number) {
+  return new Intl.NumberFormat("nl-NL", {
+    style: "currency",
+    currency: "EUR",
+  }).format(amount);
+}
+
+export default function OrdersTable({ orders }: { orders: Order[] }) {
+  const [selected, setSelected] = useState<Order | null>(null);
+
+  if (orders.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-surface py-20 text-center">
+        <PackageOpen className="mb-3 h-8 w-8 text-muted" />
+        <p className="text-sm text-muted">No orders yet.</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-border text-xs uppercase tracking-wide text-muted">
+              <th className="px-4 py-3 font-medium">Naam</th>
+              <th className="px-4 py-3 font-medium">Email</th>
+              <th className="px-4 py-3 font-medium">Telefoon</th>
+              <th className="px-4 py-3 font-medium">Bezorging</th>
+              <th className="px-4 py-3 font-medium">Betaling</th>
+              <th className="px-4 py-3 font-medium">Totaal</th>
+              <th className="px-4 py-3 font-medium">Besteld op</th>
+              <th className="px-4 py-3 font-medium" />
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr
+                key={order.id}
+                className="border-b border-border/60 text-white transition last:border-0 hover:bg-surface-hover"
+              >
+                <td className="px-4 py-3 font-medium">{order.naam}</td>
+                <td className="px-4 py-3 text-muted">{order.email}</td>
+                <td className="px-4 py-3 text-muted">
+                  {order.telefoonnummer}
+                </td>
+                <td className="px-4 py-3">
+                  <span className="rounded-full border border-border px-2 py-0.5 text-xs text-muted">
+                    {order.bezorgmethode}
+                  </span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="rounded-full border border-border px-2 py-0.5 text-xs text-muted">
+                    {order.betaalmethode}
+                  </span>
+                </td>
+                <td className="px-4 py-3 font-medium text-gold">
+                  {formatPrice(order.totaalprijs)}
+                </td>
+                <td className="px-4 py-3 text-muted">
+                  {formatDate(order.created_at)}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  <button
+                    onClick={() => setSelected(order)}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-gold transition hover:border-gold"
+                  >
+                    <Eye className="h-3.5 w-3.5" />
+                    Bekijk
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {selected && (
+        <OrderDetailModal order={selected} onClose={() => setSelected(null)} />
+      )}
+    </>
+  );
+}
