@@ -52,7 +52,8 @@
 
 ### Step 7 — Orders list (data view)
 - `app/dashboard/page.tsx` — Server Component: `createServerClient()`, `select * from orders order by created_at desc`, passes data to a table component
-- `components/orders-table.tsx` — Client Component: black/gold styled table — columns: Naam, Email, Telefoon, Bezorgmethode, Betaalmethode, Besteld op, and a "Bekijk" action that opens the detail modal
+- `components/orders-table.tsx` — Client Component: black/gold styled table — columns: Naam, Email, Telefoon, Bezorgmethode, Betaalmethode, Totaal, Besteld op, and "Bekijk"/"Verwijder" row actions
+- `app/dashboard/actions.ts` — `deleteOrder` Server Action, runs as the signed-in user (not the service role key) so the `delete` RLS policy in `0002_orders_delete_policy.sql` gates it; confirmed with a native `confirm()` prompt before deleting
 - Empty/loading/error states
 
 ### Step 8 — Order detail view

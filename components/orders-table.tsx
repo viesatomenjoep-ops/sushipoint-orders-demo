@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, PackageOpen } from "lucide-react";
+import { Eye, PackageOpen, Trash2 } from "lucide-react";
 import type { Order } from "@/lib/types";
 import OrderDetailModal from "./order-detail-modal";
+import { deleteOrder } from "@/app/dashboard/actions";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString("nl-NL", {
@@ -24,6 +25,25 @@ function formatPrice(amount: number) {
 
 export default function OrdersTable({ orders }: { orders: Order[] }) {
   const [selected, setSelected] = useState<Order | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  async function handleDelete(order: Order) {
+    if (!confirm(`Bestelling van ${order.naam} verwijderen? Dit kan niet ongedaan worden gemaakt.`)) {
+      return;
+    }
+
+    setDeletingId(order.id);
+    try {
+      await deleteOrder(order.id);
+      if (selected?.id === order.id) {
+        setSelected(null);
+      }
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Verwijderen mislukt");
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   if (orders.length === 0) {
     return (
@@ -78,13 +98,23 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
                   {formatDate(order.created_at)}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <button
-                    onClick={() => setSelected(order)}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-gold transition hover:border-gold"
-                  >
-                    <Eye className="h-3.5 w-3.5" />
-                    Bekijk
-                  </button>
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      onClick={() => setSelected(order)}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-gold transition hover:border-gold"
+                    >
+                      <Eye className="h-3.5 w-3.5" />
+                      Bekijk
+                    </button>
+                    <button
+                      onClick={() => handleDelete(order)}
+                      disabled={deletingId === order.id}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-red-400 transition hover:border-red-500 disabled:opacity-50"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      {deletingId === order.id ? "…" : "Verwijder"}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

@@ -22,8 +22,9 @@ See [IMPLEMENTATION_PLAN.MD](./IMPLEMENTATION_PLAN.MD) for the full design.
    cp .env.local.example .env.local
    ```
 
-4. Run the migration in `supabase/migrations/0001_orders.sql` against your
-   project — either paste it into the Supabase SQL editor, or with the CLI:
+4. Run the migrations in `supabase/migrations/` against your project, in
+   order (`0001_orders.sql`, then `0002_orders_delete_policy.sql`) — either
+   paste them into the Supabase SQL editor, or with the CLI:
 
    ```bash
    supabase db push
@@ -92,10 +93,13 @@ variables, and use the same value in n8n's header.
 - Every other query runs through `@supabase/ssr` with the publishable key,
   scoped by the signed-in user's session and enforced by the RLS policy in
   the migration.
-- `orders` has RLS enabled with a `select`-only policy for authenticated
-  staff. There are no `insert`/`update`/`delete` policies, so the webhook
-  route above (using the service role key) is the only supported way to
-  create an order — never insert directly from the browser.
+- `orders` has RLS enabled with `select` and `delete` policies for
+  authenticated staff (dashboard users). There's no `insert`/`update`
+  policy, so the webhook route above (using the service role key) is the
+  only supported way to create an order — never insert directly from the
+  browser. Deleting an order is done via `app/dashboard/actions.ts`'s
+  `deleteOrder`, which runs as the signed-in user through normal RLS (no
+  service role key involved) — only authenticated staff can delete.
 - `middleware.ts` refreshes the auth session on every request and redirects
   unauthenticated requests to `/dashboard/**` to `/login`. `app/dashboard/layout.tsx`
   re-checks the session server-side as defense in depth.
