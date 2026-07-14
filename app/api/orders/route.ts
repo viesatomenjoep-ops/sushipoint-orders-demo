@@ -8,7 +8,6 @@ const REQUIRED_STRING_FIELDS = [
   "email",
   "telefoonnummer",
   "adres",
-  "producten",
   "bezorgmethode",
   "betaalmethode",
 ] as const;
@@ -50,7 +49,7 @@ export async function POST(request: NextRequest) {
 
   let producten;
   try {
-    producten = parseProducten(body.producten as string);
+    producten = parseProducten(body.producten);
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : "Invalid producten" },

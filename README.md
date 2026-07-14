@@ -59,15 +59,25 @@ at this endpoint instead:
     "email": "sophie.jansen@gmail.com",
     "telefoonnummer": "31612345678",
     "adres": "Kerkstraat 25, 4901 JD Oosterhout",
-    "producten": "1x The Box - Gold , 2x Coca Cola Zero , 3x Extra sojasaus",
-    "bezorgmethode": "Bezorgen",
-    "betaalmethode": "iDEAL"
+    "producten": [
+      { "name": "sushi rol", "amount": 1 },
+      { "name": "Coca Cola Zero", "amount": 2 }
+    ],
+    "bezorgmethode": "bezorgen",
+    "betaalmethode": "contant"
   }
   ```
 
-`producten` is parsed from that `"<aantal>x <naam>"` comma-separated format
-into the structured `{ naam, aantal }[]` stored in the database. `totaalprijs`
+`producten` must be a non-empty array of `{ name, amount }` objects — `name`
+a non-empty string, `amount` a positive number. Each entry is mapped to
+`{ naam, aantal }` and stored in the `producten` jsonb column. `totaalprijs`
 is optional in the request body — it defaults to `0` if omitted.
+
+If your Vercel project has Deployment Protection enabled, n8n also needs an
+`x-vercel-protection-bypass` header (Vercel → Settings → Deployment
+Protection → Protection Bypass for Automation) or the deployment must have
+protection disabled for Production, or every request — including this one —
+gets rejected by Vercel before it reaches this route.
 
 Set `N8N_ORDERS_WEBHOOK_SECRET` (a long random value, e.g.
 `openssl rand -hex 32`) in `.env.local` and in your deployment's environment

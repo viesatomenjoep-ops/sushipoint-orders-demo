@@ -72,7 +72,7 @@
 
 ### Step 11 — n8n order ingestion (replaces the Excel-writing step)
 - `app/api/orders/route.ts` — `POST` webhook n8n calls in place of its Excel step. Authenticates via a shared secret (`x-webhook-secret` header, compared with `timingSafeEqual`), not a Supabase key — n8n never holds anything that bypasses RLS.
-- `lib/producten.ts` — parses the free-text `producten` field (e.g. `"1x The Box - Gold , 2x Coca Cola Zero"`) into the `{ naam, aantal }[]` shape the `orders` table expects
+- `lib/producten.ts` — validates the `producten` field (an array of `{ name, amount }` objects, as sent by n8n) and maps it to the `{ naam, aantal }[]` shape the `orders` table expects
 - `lib/supabase/admin.ts` — service-role client, used only inside this route, to perform the insert (the `orders` table has no anon/authenticated insert policy by design)
 - `totaalprijs` isn't in the source data yet, so it defaults to `0` if n8n doesn't send it; the route accepts it as an optional field for when a price source is wired up later
 

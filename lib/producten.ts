@@ -1,28 +1,34 @@
 import type { ProductItem } from "@/lib/types";
 
-const ITEM_PATTERN = /^(\d+)\s*x\s*(.+)$/i;
-
 /**
- * Parses the free-text product list n8n sends, e.g.
- * "1x The Box - Gold , 2x Coca Cola Zero , 3x Extra sojasaus"
+ * Validates and maps the product list n8n sends, e.g.
+ * [{ "name": "sushi rol", "amount": 1 }]
  * into the structured shape stored in the `producten` jsonb column.
  */
-export function parseProducten(raw: string): ProductItem[] {
-  const parts = raw
-    .split(",")
-    .map((part) => part.trim())
-    .filter(Boolean);
+export function parseProducten(raw: unknown): ProductItem[] {
+  if (!Array.isArray(raw)) {
+    throw new Error("producten must be an array");
+  }
 
-  if (parts.length === 0) {
+  if (raw.length === 0) {
     throw new Error("producten is empty");
   }
 
-  return parts.map((part) => {
-    const match = part.match(ITEM_PATTERN);
-    if (!match) {
-      throw new Error(`Could not parse product entry: "${part}"`);
+  return raw.map((item, index) => {
+    if (typeof item !== "object" || item === null) {
+      throw new Error(`producten[${index}] must be an object`);
     }
-    const [, aantal, naam] = match;
-    return { naam: naam.trim(), aantal: Number(aantal) };
+
+    const { name, amount } = item as Record<string, unknown>;
+
+    if (typeof name !== "string" || name.trim() === "") {
+      throw new Error(`producten[${index}].name must be a non-empty string`);
+    }
+
+    if (typeof amount !== "number" || !Number.isFinite(amount) || amount <= 0) {
+      throw new Error(`producten[${index}].amount must be a positive number`);
+    }
+
+    return { naam: name.trim(), aantal: amount };
   });
 }
