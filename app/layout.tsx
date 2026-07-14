@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import VapiWidget from "@/components/vapi-widget";
 
 export const metadata: Metadata = {
   title: "Sushi Point — Order Dashboard",
@@ -13,7 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-background text-white antialiased">{children}</body>
+      <body className="bg-background text-white antialiased">
+        {children}
+        <VapiWidget />
+      </body>
     </html>
   );
 }
