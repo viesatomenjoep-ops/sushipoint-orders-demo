@@ -69,29 +69,40 @@ export async function POST(request: NextRequest) {
     totaalprijs = value;
   }
 
-  const supabase = createAdminClient();
-  const { data, error } = await supabase
-    .from("orders")
-    .insert({
-      naam: body.naam,
-      email: body.email,
-      telefoonnummer: body.telefoonnummer,
-      adres: body.adres,
-      producten,
-      bezorgmethode: body.bezorgmethode,
-      betaalmethode: body.betaalmethode,
-      totaalprijs,
-    })
-    .select()
-    .single();
+  try {
+    const supabase = createAdminClient();
+    const { data, error } = await supabase
+      .from("orders")
+      .insert({
+        naam: body.naam,
+        email: body.email,
+        telefoonnummer: body.telefoonnummer,
+        adres: body.adres,
+        producten,
+        bezorgmethode: body.bezorgmethode,
+        betaalmethode: body.betaalmethode,
+        totaalprijs,
+      })
+      .select()
+      .single();
 
-  if (error) {
-    console.error("Failed to insert order:", error.message);
+    if (error) {
+      console.error("Failed to insert order:", error.message);
+      return NextResponse.json(
+        { error: "Failed to create order", detail: error.message },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ order: data }, { status: 201 });
+  } catch (err) {
+    console.error("Unexpected error creating order:", err);
     return NextResponse.json(
-      { error: "Failed to create order" },
+      {
+        error: "Internal server error",
+        detail: err instanceof Error ? err.message : String(err),
+      },
       { status: 500 }
     );
   }
-
-  return NextResponse.json({ order: data }, { status: 201 });
 }
