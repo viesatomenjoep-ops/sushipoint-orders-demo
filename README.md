@@ -23,8 +23,9 @@ See [IMPLEMENTATION_PLAN.MD](./IMPLEMENTATION_PLAN.MD) for the full design.
    ```
 
 4. Run the migrations in `supabase/migrations/` against your project, in
-   order (`0001_orders.sql`, then `0002_orders_delete_policy.sql`) — either
-   paste them into the Supabase SQL editor, or with the CLI:
+   order (`0001_orders.sql`, `0002_orders_delete_policy.sql`, then
+   `0003_orders_producten_prijs.sql`) — either paste them into the Supabase
+   SQL editor, or with the CLI:
 
    ```bash
    supabase db push
@@ -61,18 +62,20 @@ at this endpoint instead:
     "telefoonnummer": "31612345678",
     "adres": "Kerkstraat 25, 4901 JD Oosterhout",
     "producten": [
-      { "name": "sushi rol", "amount": 1 },
-      { "name": "Coca Cola Zero", "amount": 2 }
+      { "name": "sushi rol", "amount": 1, "price": 12.95 },
+      { "name": "Coca Cola Zero", "amount": 2, "price": 2.75 }
     ],
     "bezorgmethode": "bezorgen",
     "betaalmethode": "contant"
   }
   ```
 
-`producten` must be a non-empty array of `{ name, amount }` objects — `name`
-a non-empty string, `amount` a positive number. Each entry is mapped to
-`{ naam, aantal }` and stored in the `producten` jsonb column. `totaalprijs`
-is optional in the request body — it defaults to `0` if omitted.
+`producten` must be a non-empty array of `{ name, amount, price }` objects —
+`name` a non-empty string, `amount` a positive number, `price` a
+non-negative number (per-item price). Each entry is mapped to
+`{ naam, aantal, prijs }` and stored in the `producten` jsonb column.
+`totaalprijs` is calculated server-side as the sum of `price * amount`
+across all products — it's not read from the request body.
 
 If your Vercel project has Deployment Protection enabled, n8n also needs an
 `x-vercel-protection-bypass` header (Vercel → Settings → Deployment

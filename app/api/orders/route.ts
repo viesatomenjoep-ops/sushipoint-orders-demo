@@ -57,17 +57,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let totaalprijs = 0;
-  if (body.totaalprijs !== undefined) {
-    const value = Number(body.totaalprijs);
-    if (!Number.isFinite(value) || value < 0) {
-      return NextResponse.json(
-        { error: "totaalprijs must be a non-negative number" },
-        { status: 400 }
-      );
-    }
-    totaalprijs = value;
-  }
+  const totaalprijs = producten.reduce(
+    (sum, item) => sum + item.prijs * item.aantal,
+    0
+  );
 
   try {
     const supabase = createAdminClient();

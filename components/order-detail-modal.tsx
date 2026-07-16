@@ -83,6 +83,12 @@ export default function OrderDetailModal({
                     <th className="px-3 py-2 text-right font-medium">
                       Aantal
                     </th>
+                    <th className="px-3 py-2 text-right font-medium">
+                      Prijs
+                    </th>
+                    <th className="px-3 py-2 text-right font-medium">
+                      Subtotaal
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -95,12 +101,21 @@ export default function OrderDetailModal({
                       <td className="px-3 py-2 text-right text-muted">
                         {item.aantal}
                       </td>
+                      <td className="px-3 py-2 text-right text-muted">
+                        {formatPrice(item.prijs)}
+                      </td>
+                      <td className="px-3 py-2 text-right text-muted">
+                        {formatPrice(item.prijs * item.aantal)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
                   <tr className="border-t border-border">
-                    <td className="px-3 py-2 text-sm font-medium text-white">
+                    <td
+                      colSpan={3}
+                      className="px-3 py-2 text-sm font-medium text-white"
+                    >
                       Totaal
                     </td>
                     <td className="px-3 py-2 text-right text-sm font-semibold text-gold">

@@ -15,6 +15,35 @@ declare global {
 }
 
 const VAPI_ASSISTANT_ID = "1f3782c7-f440-48bd-ac7d-387d1654f6f0";
+const GOLD = "#D4AF37";
+
+const BUTTON_CONFIG = {
+  position: "bottom-right",
+  offset: "24px",
+  width: "56px",
+  height: "56px",
+  idle: {
+    color: GOLD,
+    type: "round",
+    title: "Heb je een vraag?",
+    subtitle: "Praat met onze assistent",
+    icon: "https://unpkg.com/lucide-static@latest/icons/phone.svg",
+  },
+  loading: {
+    color: GOLD,
+    type: "round",
+    title: "Verbinden…",
+    subtitle: "Een moment geduld",
+    icon: "https://unpkg.com/lucide-static@latest/icons/loader-2.svg",
+  },
+  active: {
+    color: GOLD,
+    type: "round",
+    title: "Gesprek bezig…",
+    subtitle: "Klik om te stoppen",
+    icon: "https://unpkg.com/lucide-static@latest/icons/phone-off.svg",
+  },
+};
 
 export default function VapiWidget() {
   useEffect(() => {
@@ -27,7 +56,11 @@ export default function VapiWidget() {
     }
 
     if (window.vapiSDK) {
-      window.vapiSDK.run({ apiKey, assistant: VAPI_ASSISTANT_ID, config: {} });
+      window.vapiSDK.run({
+        apiKey,
+        assistant: VAPI_ASSISTANT_ID,
+        config: BUTTON_CONFIG,
+      });
       return;
     }
 
@@ -40,7 +73,7 @@ export default function VapiWidget() {
       window.vapiSDK?.run({
         apiKey,
         assistant: VAPI_ASSISTANT_ID,
-        config: {},
+        config: BUTTON_CONFIG,
       });
     };
     document.body.appendChild(script);

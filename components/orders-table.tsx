@@ -49,7 +49,7 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-surface py-20 text-center">
         <PackageOpen className="mb-3 h-8 w-8 text-muted" />
-        <p className="text-sm text-muted">No orders yet.</p>
+        <p className="text-sm text-muted">Nog geen bestellingen.</p>
       </div>
     );
   }
@@ -61,7 +61,7 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
           <thead>
             <tr className="border-b border-border text-xs uppercase tracking-wide text-muted">
               <th className="px-4 py-3 font-medium">Naam</th>
-              <th className="px-4 py-3 font-medium">Email</th>
+              <th className="px-4 py-3 font-medium">E-mail</th>
               <th className="px-4 py-3 font-medium">Telefoon</th>
               <th className="px-4 py-3 font-medium">Bezorging</th>
               <th className="px-4 py-3 font-medium">Betaling</th>

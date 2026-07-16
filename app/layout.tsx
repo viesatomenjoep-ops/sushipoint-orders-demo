@@ -3,8 +3,8 @@ import "./globals.css";
 import VapiWidget from "@/components/vapi-widget";
 
 export const metadata: Metadata = {
-  title: "Sushi Point — Order Dashboard",
-  description: "Order management dashboard for Sushi Point",
+  title: "Sushi Point — Bestellingen",
+  description: "Bestellingenbeheer voor Sushi Point",
 };
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="nl">
       <body className="bg-background text-white antialiased">
         {children}
         <VapiWidget />

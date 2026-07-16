@@ -8,7 +8,7 @@ export default function LoginPage() {
           <h1 className="text-2xl font-semibold tracking-tight text-white">
             Sushi <span className="text-gold">Point</span>
           </h1>
-          <p className="mt-1 text-sm text-muted">Order Management Dashboard</p>
+          <p className="mt-1 text-sm text-muted">Bestellingenbeheer</p>
         </div>
         <LoginForm />
       </div>

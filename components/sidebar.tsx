@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 import { ClipboardList, LogOut, UtensilsCrossed } from "lucide-react";
 import { signOut } from "@/app/auth/actions";
 
-const navItems = [{ href: "/dashboard", label: "Orders", icon: ClipboardList }];
+const navItems = [
+  { href: "/dashboard", label: "Bestellingen", icon: ClipboardList },
+];
 
 export default function Sidebar({ userEmail }: { userEmail: string }) {
   const pathname = usePathname();
@@ -47,7 +49,7 @@ export default function Sidebar({ userEmail }: { userEmail: string }) {
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-surface-hover hover:text-white"
           >
             <LogOut className="h-4 w-4" />
-            Sign out
+            Uitloggen
           </button>
         </form>
       </div>

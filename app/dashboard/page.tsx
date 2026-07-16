@@ -7,9 +7,10 @@ export default async function DashboardPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-xl font-semibold text-white">Orders</h1>
+        <h1 className="text-xl font-semibold text-white">Bestellingen</h1>
         <p className="mt-1 text-sm text-muted">
-          {orders.length} {orders.length === 1 ? "order" : "orders"} total
+          {orders.length} {orders.length === 1 ? "bestelling" : "bestellingen"}{" "}
+          in totaal
         </p>
       </div>
 

@@ -1,6 +1,7 @@
 export interface ProductItem {
   naam: string;
   aantal: number;
+  prijs: number;
 }
 
 export interface Order {

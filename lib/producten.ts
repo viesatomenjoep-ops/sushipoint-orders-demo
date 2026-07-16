@@ -2,7 +2,7 @@ import type { ProductItem } from "@/lib/types";
 
 /**
  * Validates and maps the product list n8n sends, e.g.
- * [{ "name": "sushi rol", "amount": 1 }]
+ * [{ "name": "sushi rol", "amount": 1, "price": 12.95 }]
  * into the structured shape stored in the `producten` jsonb column.
  */
 export function parseProducten(raw: unknown): ProductItem[] {
@@ -19,7 +19,7 @@ export function parseProducten(raw: unknown): ProductItem[] {
       throw new Error(`producten[${index}] must be an object`);
     }
 
-    const { name, amount } = item as Record<string, unknown>;
+    const { name, amount, price } = item as Record<string, unknown>;
 
     if (typeof name !== "string" || name.trim() === "") {
       throw new Error(`producten[${index}].name must be a non-empty string`);
@@ -29,6 +29,10 @@ export function parseProducten(raw: unknown): ProductItem[] {
       throw new Error(`producten[${index}].amount must be a positive number`);
     }
 
-    return { naam: name.trim(), aantal: amount };
+    if (typeof price !== "number" || !Number.isFinite(price) || price < 0) {
+      throw new Error(`producten[${index}].price must be a non-negative number`);
+    }
+
+    return { naam: name.trim(), aantal: amount, prijs: price };
   });
 }

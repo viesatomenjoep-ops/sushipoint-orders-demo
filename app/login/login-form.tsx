@@ -5,6 +5,15 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { LogIn, Loader2 } from "lucide-react";
 
+const AUTH_ERROR_TRANSLATIONS: Record<string, string> = {
+  "Invalid login credentials": "Ongeldige inloggegevens",
+  "Email not confirmed": "E-mailadres nog niet bevestigd",
+};
+
+function translateAuthError(message: string): string {
+  return AUTH_ERROR_TRANSLATIONS[message] ?? message;
+}
+
 export default function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -24,7 +33,7 @@ export default function LoginForm() {
     });
 
     if (error) {
-      setError(error.message);
+      setError(translateAuthError(error.message));
       setLoading(false);
       return;
     }
@@ -41,7 +50,7 @@ export default function LoginForm() {
       <div className="space-y-4">
         <div>
           <label htmlFor="email" className="mb-1.5 block text-sm text-muted">
-            Email
+            E-mailadres
           </label>
           <input
             id="email"
@@ -59,7 +68,7 @@ export default function LoginForm() {
             htmlFor="password"
             className="mb-1.5 block text-sm text-muted"
           >
-            Password
+            Wachtwoord
           </label>
           <input
             id="password"
@@ -89,7 +98,7 @@ export default function LoginForm() {
           ) : (
             <LogIn className="h-4 w-4" />
           )}
-          {loading ? "Signing in…" : "Sign in"}
+          {loading ? "Bezig met inloggen…" : "Inloggen"}
         </button>
       </div>
     </form>
