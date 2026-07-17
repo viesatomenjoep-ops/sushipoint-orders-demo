@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Eye, PackageOpen, Trash2 } from "lucide-react";
 import type { Order } from "@/lib/types";
+import { createClient } from "@/lib/supabase/client";
 import OrderDetailModal from "./order-detail-modal";
 import { deleteOrder } from "@/app/dashboard/actions";
 
@@ -26,6 +28,23 @@ function formatPrice(amount: number) {
 export default function OrdersTable({ orders }: { orders: Order[] }) {
   const [selected, setSelected] = useState<Order | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const supabase = createClient();
+    const channel = supabase
+      .channel("orders-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "orders" },
+        () => router.refresh()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [router]);
 
   async function handleDelete(order: Order) {
     if (!confirm(`Bestelling van ${order.naam} verwijderen? Dit kan niet ongedaan worden gemaakt.`)) {
