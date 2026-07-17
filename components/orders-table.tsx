@@ -71,10 +71,6 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
 
             <div className="space-y-1.5 text-sm">
               <div className="flex justify-between gap-3">
-                <span className="text-muted">E-mail</span>
-                <span className="truncate text-white">{order.email}</span>
-              </div>
-              <div className="flex justify-between gap-3">
                 <span className="text-muted">Telefoon</span>
                 <span className="text-white">{order.telefoonnummer}</span>
               </div>
@@ -120,7 +116,6 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
           <thead>
             <tr className="border-b border-border text-xs uppercase tracking-wide text-muted">
               <th className="px-4 py-3 font-medium">Naam</th>
-              <th className="px-4 py-3 font-medium">E-mail</th>
               <th className="px-4 py-3 font-medium">Telefoon</th>
               <th className="px-4 py-3 font-medium">Bezorging</th>
               <th className="px-4 py-3 font-medium">Betaling</th>
@@ -136,7 +131,6 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
                 className="border-b border-border/60 text-white transition last:border-0 hover:bg-surface-hover"
               >
                 <td className="px-4 py-3 font-medium">{order.naam}</td>
-                <td className="px-4 py-3 text-muted">{order.email}</td>
                 <td className="px-4 py-3 text-muted">
                   {order.telefoonnummer}
                 </td>

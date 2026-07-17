@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, MapPin, Phone, Mail, Truck, CreditCard } from "lucide-react";
+import { X, MapPin, Phone, Truck, CreditCard } from "lucide-react";
 import type { Order } from "@/lib/types";
 
 function formatPrice(amount: number) {
@@ -47,10 +47,6 @@ export default function OrderDetailModal({
 
         <div className="space-y-4 px-5 py-4">
           <div className="grid grid-cols-1 gap-2 text-sm text-muted sm:grid-cols-2">
-            <div className="flex items-center gap-2">
-              <Mail className="h-3.5 w-3.5 text-gold" />
-              {order.email}
-            </div>
             <div className="flex items-center gap-2">
               <Phone className="h-3.5 w-3.5 text-gold" />
               {order.telefoonnummer}
