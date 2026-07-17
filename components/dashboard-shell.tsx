@@ -21,20 +21,6 @@ export default function DashboardShell({
 
   return (
     <div className="flex min-h-screen bg-background">
-      <div className="flex h-14 items-center gap-3 border-b border-border bg-surface px-4 md:hidden">
-        <button
-          onClick={() => setOpen(true)}
-          className="rounded-lg p-1.5 text-muted transition hover:bg-surface-hover hover:text-white"
-          aria-label="Open menu"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-        <UtensilsCrossed className="h-5 w-5 text-gold" />
-        <span className="text-base font-semibold text-white">
-          Sushi <span className="text-gold">Point</span>
-        </span>
-      </div>
-
       {open && (
         <div
           className="fixed inset-0 z-30 bg-black/60 md:hidden"
@@ -44,7 +30,23 @@ export default function DashboardShell({
 
       <Sidebar userEmail={userEmail} open={open} onClose={() => setOpen(false)} />
 
-      <main className="flex-1 p-6 pt-6 lg:p-8">{children}</main>
+      <div className="flex flex-1 flex-col">
+        <div className="flex h-14 items-center gap-3 border-b border-border bg-surface px-4 md:hidden">
+          <button
+            onClick={() => setOpen(true)}
+            className="rounded-lg p-1.5 text-muted transition hover:bg-surface-hover hover:text-white"
+            aria-label="Open menu"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          <UtensilsCrossed className="h-5 w-5 text-gold" />
+          <span className="text-base font-semibold text-white">
+            Sushi <span className="text-gold">Point</span>
+          </span>
+        </div>
+
+        <main className="flex-1 p-6 pt-6 lg:p-8">{children}</main>
+      </div>
     </div>
   );
 }
