@@ -56,7 +56,66 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
 
   return (
     <>
-      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+      <div className="space-y-3 md:hidden">
+        {orders.map((order) => (
+          <div
+            key={order.id}
+            className="rounded-xl border border-border bg-surface p-4"
+          >
+            <div className="mb-3 flex items-start justify-between gap-3">
+              <p className="font-medium text-white">{order.naam}</p>
+              <p className="whitespace-nowrap font-medium text-gold">
+                {formatPrice(order.totaalprijs)}
+              </p>
+            </div>
+
+            <div className="space-y-1.5 text-sm">
+              <div className="flex justify-between gap-3">
+                <span className="text-muted">E-mail</span>
+                <span className="truncate text-white">{order.email}</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span className="text-muted">Telefoon</span>
+                <span className="text-white">{order.telefoonnummer}</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span className="text-muted">Bezorging</span>
+                <span className="text-white">{order.bezorgmethode}</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span className="text-muted">Betaling</span>
+                <span className="text-white">{order.betaalmethode}</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span className="text-muted">Besteld op</span>
+                <span className="text-white">
+                  {formatDate(order.created_at)}
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-3 flex items-center gap-2 border-t border-border pt-3">
+              <button
+                onClick={() => setSelected(order)}
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-gold transition hover:border-gold"
+              >
+                <Eye className="h-3.5 w-3.5" />
+                Bekijk
+              </button>
+              <button
+                onClick={() => handleDelete(order)}
+                disabled={deletingId === order.id}
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-red-400 transition hover:border-red-500 disabled:opacity-50"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                {deletingId === order.id ? "…" : "Verwijder"}
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden overflow-x-auto rounded-xl border border-border bg-surface md:block">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-border text-xs uppercase tracking-wide text-muted">

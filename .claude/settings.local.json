@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(git -C /Users/joephellemons/sushipoint-orders-demo status --short)",
+      "Bash([ -s \"$f\" ])",
+      "Bash(sleep 2)",
+      "Bash(cat /private/tmp/claude-501/-Users-joephellemons-sushipoint-orders-demo/e2485eac-c3c5-48ee-a1ee-e019ed8dee90/tasks/bfq4f1e2u.output)",
+      "Bash(node -e \"console.log\\(process.arch, process.platform\\)\")",
+      "Bash(npm install *)"
     ]
   }
 }
