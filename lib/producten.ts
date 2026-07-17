@@ -5,10 +5,24 @@ import type { ProductItem } from "@/lib/types";
  * [{ "name": "sushi rol", "amount": 1, "price": 12.95 }]
  * into the structured shape stored in the `producten` jsonb column.
  */
+function isIndexKeyedObject(value: unknown): value is Record<string, unknown> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return false;
+  }
+  const keys = Object.keys(value);
+  return keys.length > 0 && keys.every((key, i) => key === String(i));
+}
+
 export function parseProducten(raw: unknown): ProductItem[] {
   // n8n collapses a single-item array to a bare object in some node
   // configurations — accept that shape too rather than rejecting it.
-  const list = Array.isArray(raw) ? raw : [raw];
+  // It can also turn a multi-item array into an object keyed by index
+  // (e.g. { "0": {...}, "1": {...} }) — unwrap that back into an array.
+  const list = Array.isArray(raw)
+    ? raw
+    : isIndexKeyedObject(raw)
+      ? Object.values(raw)
+      : [raw];
 
   if (list.length === 0) {
     throw new Error("producten is empty");
