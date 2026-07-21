@@ -6,6 +6,7 @@ import { Eye, PackageOpen, Trash2 } from "lucide-react";
 import type { Order } from "@/lib/types";
 import { createClient } from "@/lib/supabase/client";
 import OrderDetailModal from "./order-detail-modal";
+import ConfirmDialog from "./confirm-dialog";
 import { deleteOrder } from "@/app/dashboard/actions";
 
 function formatDate(iso: string) {
@@ -28,6 +29,8 @@ function formatPrice(amount: number) {
 export default function OrdersTable({ orders }: { orders: Order[] }) {
   const [selected, setSelected] = useState<Order | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -46,19 +49,20 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
     };
   }, [router]);
 
-  async function handleDelete(order: Order) {
-    if (!confirm(`Bestelling van ${order.naam} verwijderen? Dit kan niet ongedaan worden gemaakt.`)) {
-      return;
-    }
+  async function confirmDelete() {
+    if (!orderToDelete) return;
+    const order = orderToDelete;
 
     setDeletingId(order.id);
+    setDeleteError(null);
     try {
       await deleteOrder(order.id);
       if (selected?.id === order.id) {
         setSelected(null);
       }
+      setOrderToDelete(null);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Verwijderen mislukt");
+      setDeleteError(err instanceof Error ? err.message : "Verwijderen mislukt");
     } finally {
       setDeletingId(null);
     }
@@ -118,7 +122,7 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
                 Bekijk
               </button>
               <button
-                onClick={() => handleDelete(order)}
+                onClick={() => setOrderToDelete(order)}
                 disabled={deletingId === order.id}
                 className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-red-400 transition hover:border-red-500 disabled:opacity-50"
               >
@@ -179,7 +183,7 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
                       Bekijk
                     </button>
                     <button
-                      onClick={() => handleDelete(order)}
+                      onClick={() => setOrderToDelete(order)}
                       disabled={deletingId === order.id}
                       className="inline-flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-red-400 transition hover:border-red-500 disabled:opacity-50"
                     >
@@ -196,6 +200,23 @@ export default function OrdersTable({ orders }: { orders: Order[] }) {
 
       {selected && (
         <OrderDetailModal order={selected} onClose={() => setSelected(null)} />
+      )}
+
+      {orderToDelete && (
+        <ConfirmDialog
+          message={`Bestelling van ${orderToDelete.naam} verwijderen? Dit kan niet ongedaan worden gemaakt.`}
+          busy={deletingId === orderToDelete.id}
+          onConfirm={confirmDelete}
+          onCancel={() => setOrderToDelete(null)}
+        />
+      )}
+
+      {deleteError && (
+        <ConfirmDialog
+          message={deleteError}
+          confirmLabel="Ok"
+          onConfirm={() => setDeleteError(null)}
+        />
       )}
     </>
   );
